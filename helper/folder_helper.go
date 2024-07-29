@@ -6,10 +6,6 @@ import (
 	"github.com/sqweek/dialog"
 )
 
-func A() {
-	fmt.Println("AAAAAAA")
-}
-
 func SelectFolder() (string, error) {
 	selectedFolder, err := dialog.Directory().Title("Select a folder").Browse()
 	if err != nil {
