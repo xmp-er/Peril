@@ -67,6 +67,18 @@ func main() {
 				//log the error
 				fmt.Println("There was a error in opening the file:", err)
 			}
+			fmt.Println("Start")
+			pass, err := helper.GeneratePassword(32)
+			if err != nil {
+				//Log that there was a error generating the password
+				fmt.Println("There was a error generating the password: ", err)
+			}
+			result, err := helper.Encrypt([]byte("Ass"), []byte(pass))
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(string(result))
+			fmt.Println("End")
 			//Log that the file was opened at that location
 		case "mfile", "4":
 			if len(e_e) < 2 {
