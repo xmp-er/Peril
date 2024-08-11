@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-
-	"github.com/sqweek/dialog"
 )
 
-func OpenOrCreateFile(fileName string, option string) error {
-	if _, err := os.Stat(fileName + ".md"); option == "ofile" && os.IsNotExist(err) {
+func OpenOrCreateFile(fileName string, current_folder_location string) error {
+	fileName = current_folder_location + "/" + fileName
+	if _, err := os.Stat(fileName + ".md"); os.IsNotExist(err) {
 		//File does not exist, log it.
 		fmt.Printf("File %v.md not found at current location,creating it\n", fileName)
 	}
@@ -25,11 +24,11 @@ func OpenOrCreateFile(fileName string, option string) error {
 	return nil
 }
 
-func DeleteFile(fileName string) error {
+func DeleteFile(fileName, current_folder_location string) error {
+	fileName = current_folder_location + "/" + fileName
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {
 		//File does not exist, log it.
-		fmt.Printf("File %v not found at current location,aboring operation\n", fileName)
-		return nil
+		return err
 	}
 	err := os.Remove(fileName)
 	if err != nil {
@@ -38,10 +37,24 @@ func DeleteFile(fileName string) error {
 	return nil
 }
 
-func SelectFile() (string, error) {
-	file, err := dialog.File().Title("Select a file to upload").Load()
+func IsDirectoryExists(path string) (bool, error) {
+	info, err := os.Stat(path)
 	if err != nil {
-		return "", fmt.Errorf("error selecting the file as %v", err)
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, err
 	}
-	return file, nil
+	return info.IsDir(), nil
+}
+
+func IsFileExists(filePath string) (bool, error) {
+	info, err := os.Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return !info.IsDir(), nil
 }

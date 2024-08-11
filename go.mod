@@ -3,6 +3,7 @@ module github.com/xmp-er/peril
 go 1.22.4
 
 require (
+	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
 	github.com/sqweek/dialog v0.0.0-20240226140203-065105509627
 	golang.org/x/crypto v0.25.0
 )

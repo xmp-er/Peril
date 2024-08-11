@@ -13,13 +13,9 @@ import (
 	"golang.org/x/crypto/chacha20"
 )
 
-func EncryptAndDeleteOriginal(fileName string) (string, error) {
+func EncryptAndDeleteOriginal(fileName, current_folder_location string) (string, error) {
 	//Read the file Contents,generate a password,delete the original file,return the password
-	if _, err := os.Stat(fileName + ".md"); os.IsNotExist(err) {
-		//File does not exist, log it.
-		return "", fmt.Errorf("🔴[ERROR] file %v does not exist at current loaction, aborting encryption", (fileName + ".md"))
-	}
-
+	fileName = current_folder_location + "/" + fileName
 	fileData, err := os.Open(fileName + ".md")
 	if err != nil {
 		return "", fmt.Errorf("🔴[ERROR] error opening the file %v as %v, aborting encryption", (fileName + ".md"), err)
@@ -72,7 +68,8 @@ func EncryptAndDeleteOriginal(fileName string) (string, error) {
 	return password, nil
 }
 
-func DecryptAndRecoverOriginal(fileName string, pass string) error {
+func DecryptAndRecoverOriginal(fileName, pass, current_folder_location string) error {
+	fileName = current_folder_location + "/" + fileName
 	if _, err := os.Stat(fileName + ".enc"); os.IsNotExist(err) {
 		//File does not exist, log it.
 		return fmt.Errorf("🔴[ERROR] file %v does not exist at current loaction, aborting decryption", (fileName + ".enc"))

@@ -6,7 +6,11 @@ import (
 	"strings"
 )
 
-func UploadToGoogleDrive(localFilePath string) error {
+func UploadToGoogleDrive(localFilePath, current_folder_location string) error {
+	err := configRCloneAuth()
+	if err != nil {
+		return err
+	}
 	//Getting file name
 	fileName_raw := strings.Split(localFilePath, "/")
 	fileName := fileName_raw[len(fileName_raw)-1]
@@ -21,12 +25,8 @@ func UploadToGoogleDrive(localFilePath string) error {
 	default:
 		format = "misc"
 	}
-	remotePath := "peril-Markdown-Editor/Note-Taker/" + format + fileName
-	err := configRCloneAuth()
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command("rclone", "copy", localFilePath, "gdrive:"+remotePath)
+	remotePath := "peril-Markdown-Notes/" + format
+	cmd := exec.Command("rclone", "copy", current_folder_location+localFilePath, "gdrive:"+remotePath)
 	err = cmd.Run()
 	if err != nil {
 		//Log that we failed to upload file
