@@ -1,13 +1,117 @@
 package helper
 
 import (
+	"bufio"
 	"crypto/rand"
+	"fmt"
 	"io"
 	"math/big"
+	"os"
+	"os/exec"
 	"strings"
 
 	"golang.org/x/crypto/chacha20"
 )
+
+func EncryptAndDeleteOriginal(fileName string) (string, error) {
+	//Read the file Contents,generate a password,delete the original file,return the password
+	if _, err := os.Stat(fileName + ".md"); os.IsNotExist(err) {
+		//File does not exist, log it.
+		return "", fmt.Errorf("🔴[ERROR] file %v does not exist at current loaction, aborting encryption", (fileName + ".md"))
+	}
+
+	fileData, err := os.Open(fileName + ".md")
+	if err != nil {
+		return "", fmt.Errorf("🔴[ERROR] error opening the file %v as %v, aborting encryption", (fileName + ".md"), err)
+	}
+	scanner := bufio.NewScanner(fileData)
+	var finalString string
+	isFirstLine := true
+	for scanner.Scan() {
+		curr_line := scanner.Text()
+		if isFirstLine {
+			finalString = curr_line
+			isFirstLine = false
+		} else {
+			finalString = finalString + "\n" + curr_line
+		}
+	}
+	defer fileData.Close()
+
+	if err := scanner.Err(); err != nil {
+		return "", fmt.Errorf("🔴[ERROR] error reading the file %v as %v, aborting encryption", (fileName + ".md"), err)
+	}
+
+	password, err := GeneratePassword(32)
+	if err != nil {
+		return "", fmt.Errorf("🔴[ERROR] error generating password for the file %v as %v, aborting encryption", (fileName + ".md"), err)
+	}
+	encryptedFileData, err := Encrypt([]byte(finalString), []byte(password))
+	if err != nil {
+		return "", fmt.Errorf("🔴[ERROR] error encrypting file %v as %v, aborting encryption", (fileName + ".md"), err)
+	}
+
+	//Storing the file as .enc format
+
+	fileOutputName := fmt.Sprintf("%v.enc", fileName)
+	err = os.WriteFile(fileOutputName, encryptedFileData, 0644)
+	if err != nil {
+		return "", fmt.Errorf("🔴[ERROR] error writing data to file %v from file %v as %v, aborting encryption", (fileName + ".md"), fileOutputName, err)
+	}
+
+	//log that the file was encrypted and the original file was deleted
+	msg := fmt.Sprintf("🟢[DONE] the file %v.md was encrypted to %v.enc and the original file was deleted", fileName, fileName)
+	fmt.Println(msg)
+
+	//Delete the original file
+	err = os.Remove(fileName + ".md")
+	if err != nil {
+		return "", fmt.Errorf("🔴[ERROR] error deleting the original file %v as %v", (fileName + ".md"), err)
+	}
+
+	return password, nil
+}
+
+func DecryptAndRecoverOriginal(fileName string, pass string) error {
+	if _, err := os.Stat(fileName + ".enc"); os.IsNotExist(err) {
+		//File does not exist, log it.
+		return fmt.Errorf("🔴[ERROR] file %v does not exist at current loaction, aborting decryption", (fileName + ".enc"))
+	}
+	fileData, err := os.ReadFile(fileName + ".enc")
+	if err != nil {
+		return fmt.Errorf("🔴[ERROR] error opening the file %v as %v, aborting decryption", (fileName + ".enc"), err)
+	}
+	res, err := Decrypt(fileData, []byte(pass))
+	if err != nil {
+		return fmt.Errorf("🔴[ERROR] error decrypting the file %v as %v, aborting decryption", (fileName + ".enc"), err)
+	}
+
+	err = os.WriteFile(fileName+".md", res, 0644)
+	if err != nil {
+		return fmt.Errorf("🔴[ERROR] error writing decrypted content to file %v as %v", (fileName + ".md"), err)
+	}
+
+	err = os.Remove(fileName + ".enc")
+	if err != nil {
+		return fmt.Errorf("🔴[ERROR] error deleting the original file %v as %v", (fileName + ".md"), err)
+	}
+
+	msg := fmt.Sprintf("🟢[DONE] the file %v.enc was decrypted to %v.md and the original file was deleted", fileName, fileName)
+	fmt.Println(msg)
+
+	//Opening the decrypted file
+	cmd := exec.Command("vi", fileName+".md")
+
+	// Set the command to run in the current terminal
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Printf("🔴[ERROR] Error executing vi: %v\n", err)
+	}
+	return nil
+}
 
 // Got this shit from Claude, idk how it operates but it encrypts array of bytes via ChaCha20 encryption with a specefic key
 func Encrypt(plaintext []byte, key []byte) ([]byte, error) {
