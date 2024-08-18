@@ -1,76 +1,39 @@
-# Peril CLI Application
+# 🚀 Peril CLI Application
 
-Welcome to Peril, a command-line application for managing files and interacting with Google Drive. This guide will walk you through the available commands and how to use them.
+Welcome to Peril, a command-line tool for managing files and interacting with Google Drive. This guide outlines the available commands and how to use them.
 
-## Prerequisites
+## 🛠️ Prerequisites
 
-Before you start, ensure you have installed all necessary dependencies. This is handled automatically when you run the application.
+Dependencies are automatically resolved when you run the application.
 
-## Available Commands
+## 📋 Available Commands
 
-Below are the commands you can use with Peril:
+| Command                     | Description                                      | Example Usage                              | Notes                                     |
+|-----------------------------|--------------------------------------------------|--------------------------------------------|-------------------------------------------|
+| `open <name>`               | 📂 Create or open a file                         | `open example.txt`                         |                                           |
+| `efile <name>`              | 🔒 Encrypt a file and delete the original        | `efile example.txt`                        | Password for decryption will be displayed |
+| `dfile <name> <pass>`       | 🔓 Decrypt a file with a 32-character password   | `dfile example.txt.enc your-32-char-pass`  | Password must be exactly 32 characters    |
+| `del <name_with_extension>` | 🗑️ Delete a file                                 | `del example.txt`                          |                                           |
+| `up <Drive_Path>`           | ☁️ Upload a file to Google Drive                 | `up /path/to/file/example.txt`             |                                           |
+| `down <Drive_Path>`         | 📥 Download a file from Google Drive             | `down /path/to/file/example.txt`           |                                           |
+| `vi <name>`                 | ✏️ Open a file in the `vi` editor                | `vi example.txt`                           |                                           |
+| `help` or `h`               | ❓ Display available options                      | `help`                                     |                                           |
+| `exit`                      | 🚪 Exit the application                          | `exit`                                     |                                           |
 
-### 1. `open <name>`
+## 🚦 Getting Started
 
-- **Description**: Create or open a file with the given `<name>`.
-- **Usage**: `open example.txt`
+Run Peril and use the commands listed above to manage your files. Type `help` if you need a quick reminder of available commands.
 
-### 2. `efile <name>`
+## ⚠️ Error Handling
 
-- **Description**: Encrypt a file with the given `<name>` and delete the original file.
-- **Usage**: `efile example.txt`
-- **Output**: The password for decrypting the file will be displayed.
+If an error occurs, Peril will provide feedback. Make sure to follow the usage guidelines.
 
-### 3. `dfile <name> <pass>`
+## 📝 Notes
 
-- **Description**: Decrypt a file with the given `<name>` using the provided `<pass>` (32-character password).
-- **Usage**: `dfile example.txt.enc your-32-char-password`
-
-### 4. `del <name_with_extension>`
-
-- **Description**: Delete a file with the given `<name_with_extension>`.
-- **Usage**: `del example.txt`
-
-### 5. `up <Drive_Path>`
-
-- **Description**: Upload a file to Google Drive at the specified `<Drive_Path>`.
-- **Usage**: `up /path/to/file/example.txt`
-
-### 6. `down <Drive_Path>`
-
-- **Description**: Download a file from Google Drive from the specified `<Drive_Path>`.
-- **Usage**: `down /path/to/file/example.txt`
-
-### 7. `vi <name>`
-
-- **Description**: Open a file with the given `<name>` in the `vi` editor.
-- **Usage**: `vi example.txt`
-
-### 8. `help` or `h`
-
-- **Description**: Display the list of available commands and their usage.
-- **Usage**: `help`
-
-### 9. `exit`
-
-- **Description**: Exit the application.
-- **Usage**: `exit`
-
-## Getting Started
-
-To begin using Peril, run the application and enter any of the above commands based on what you'd like to do. If you're unsure, type `help` to see the list of available commands.
-
-## Error Handling
-
-Peril provides feedback for any errors encountered during execution. If a command is not recognized or if there is an issue, an error message will be displayed.
-
-## Notes
-
-- Ensure your password for decryption is exactly 32 characters.
-- Use the correct file paths when uploading or downloading files to/from Google Drive.
-- The application automatically resolves dependencies when launched.
+- **🔑 Password Requirement**: Ensure your password for decryption is exactly 32 characters.
+- **📁 File Paths**: Use the correct paths when uploading or downloading files.
+- **📦 Dependencies**: Automatically resolved on application start.
 
 ---
 
-Enjoy using Peril for your file management and Google Drive interactions!
-
+Enjoy using Peril for efficient file management and Google Drive operations! 🎉
