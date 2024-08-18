@@ -2,6 +2,8 @@
 
 Welcome to Peril, a command-line tool for managing files, encoding files and interacting with Google Drive. This guide outlines the available commands and how to use them.
 
+The encryption of file is performed using ChaCha20 encryption and can only be decrypted via 32-character password generated during encryption.
+
 ## 🛠️ Prerequisites
 
 Dependencies are automatically resolved when you run the application.
