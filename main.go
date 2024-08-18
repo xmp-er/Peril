@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	auth "github.com/xmp-er/peril/Auth"
@@ -14,6 +15,23 @@ import (
 var options string = "\n⚪️ open <name> [Create/Open file]\n⚪️ efile <name> [Encrypt file]\n⚪️ dfile <name> [Decrypt File]\n⚪️ del <name_with_extension> [Delete file]\n⚪️ up <Drive_Path> [Upload a file to Google Drive]\n⚪️ down <Drive_Path> [Download a file from Google Drive]"
 
 func main() {
+	//-------------X_Configuring dependencies_X--------------------
+	scriptPath := "install_dependencies.sh"
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("powershell", "-ExecutionPolicy", "Bypass", "-File", scriptPath)
+	} else {
+		cmd = exec.Command("bash", scriptPath)
+	}
+	fmt.Println("🟡[In-progress] Checking if dependencies are resolved")
+	err := cmd.Run()
+	if err != nil {
+		fmt.Printf("🔴[ERROR] Error running script to resolve dependencies: %v\n", err)
+		return
+	}
+
+	fmt.Println("🟢[SUCCESS] Dependencies resolved successfully")
+	//-------------X_Configured dependencies_X--------------------
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Welcome to Peril, what would you like to do?" + options)
 	current_folder_location, err := helper.GetHomeDirectory()
@@ -35,7 +53,7 @@ func main() {
 			os.Exit(1)
 		}
 	}
-	cmd := exec.Command("cd", current_folder_location)
+	cmd = exec.Command("cd", current_folder_location)
 	err = cmd.Run()
 	if err != nil {
 		fmt.Println("🔴[ERROR] Error unable to move to desired directory, aborting application")
