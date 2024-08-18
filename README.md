@@ -4,6 +4,8 @@ Welcome to Peril, a command-line tool for managing files, encoding files and int
 
 The encryption of file is performed using ChaCha20 encryption and can only be decrypted via 32-character password generated during encryption.
 
+The encrypted and decrypted files can be uploaded and downloaded to G-Drive via one-time Authorization via Rclone.
+
 ## 🛠️ Prerequisites
 
 Dependencies are automatically resolved when you run the application.
