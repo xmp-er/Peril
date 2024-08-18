@@ -1,6 +1,6 @@
 # 🚀 Peril CLI Application
 
-Welcome to Peril, a command-line tool for managing files and interacting with Google Drive. This guide outlines the available commands and how to use them.
+Welcome to Peril, a command-line tool for managing files, encoding files and interacting with Google Drive. This guide outlines the available commands and how to use them.
 
 ## 🛠️ Prerequisites
 
